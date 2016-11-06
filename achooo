@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Creative - Start Bootstrap Theme</title>
+
+	<!-- Jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+	<!-- Plugin Map API -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+	
+    <!-- Plugin CSS -->
+    <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/creative.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+	<style>
+		#map {
+			width: 700px;
+			height: 500px;
+		}
+	</style>
+	<style>
+	.info { color: #777; padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+	.legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+	</style>
+
+</head>
+
+<body id="page-top">
+
+
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">Flu Predictor</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+            <div id='mapHolder'>
+                <div id='map'></div>
+			</div>
+			
+<script type="text/javascript" src="states.json"></script> 
+<script type="text/javascript" src="coordinate.js"></script>
+
+<script type="text/javascript">
+
+function changeFunc() 
+{
+	//remove map
+	var elem = document.getElementById("map");
+	elem.parentNode.removeChild(elem);
+	
+	//instantiate new map
+    var selectBox = document.getElementById("selectBox");
+    var year = selectBox.options[selectBox.selectedIndex].value;
+    
+    //Grab Parent Div and append child
+    
+    var newDiv = document.createElement("div"); 
+    newDiv.setAttribute("id","map");
+    var mapDiv= document.getElementById("mapHolder");
+    mapDiv.appendChild(newDiv);
+    
+	//L.map('map').setView([37.8, -96], 4);
+	instantianteMap(year);
+	
+	//Open the new database
+	var myPrettyCode = function() {
+	var count=0;
+	for(var i=0;i<test.length;i++)
+	{
+   		var loc1=[coorD[count], coorD[count+1]];
+    	L.marker(loc1).bindPopup(test[i]).addTo(map);
+    	//count+=2;
+	}
+	};
+	loadScript(year, myPrettyCode);
+}
+
+/*--------------------------------------------------------------------------------------
+var marker1 = L.marker([51.5, -0.09], {time: "2013-01-22 08:42:26+01"});
+var marker2 = L.marker([51.6, -0.09], {time: "2013-01-22 10:00:26+01"});
+var marker3 = L.marker([51.7, -0.09], {time: "2013-01-22 10:03:29+01"});
+
+    
+    
+    
+var pointA = new L.LatLng(51.8, -0.09);
+var pointB = new L.LatLng(51.9, -0.2);
+var pointList = [pointA, pointB];
+
+var polyline = new L.Polyline(pointList, {
+    time: "2013-01-22 10:24:59+01",
+    color: 'red',
+    weight: 3,
+    opacity: 1,
+    smoothFactor: 1
+});
+
+
+layerGroup = L.layerGroup([marker1, marker2, marker3, polyline ]);
+var sliderControl = L.control.sliderControl({layer:layerGroup});
+map.addControl(sliderControl);
+sliderControl.startSlider();
+    
+    
+    
+/*/    
+function instantianteMap(year)
+{
+    var map = L.map('map').setView([37.8, -96], 4);
+	
+	//Open selected database
+	
+	var myPrettyCode = function() {
+	var count=0;
+    var marker;
+	for(var i=0;i<test.length;i++)
+	{
+        
+   		var loc1=[coorD[count], coorD[count+1]];
+    	L.marker(loc1).bindPopup(test[i]).addTo(map);
+    	count+=2;
+	}
+    layerGroup = L.layerGroup([marker1, marker2, marker3, polyline ]);
+    var sliderControl = L.control.sliderControl({layer:layerGroup});
+    map.addControl(sliderControl);
+	sliderControl.startSlider();
+	};
+
+	loadScript(year, myPrettyCode);
+	
+	function loadScript(url, callback)
+	{
+    	var head = document.getElementsByTagName('head')[0];
+    	var script = document.createElement('script');
+    	script.type = 'text/javascript';
+    	script.src = url;
+
+    	script.onreadystatechange = callback;
+    	script.onload = callback;
+
+   	 	// Fire the loading
+   		 head.appendChild(script);
+	}
+	
+	//End of open selected database
+	
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+		maxZoom: 18,
+		id: 'mapbox.light'
+	}).addTo(map);
+		
+	// control that shows state info on hover
+	var info = L.control();
+
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
+	};
+
+	info.update = function (props) {
+		//Create a javascript function that takes in the props.Name and 
+		//if its a certain name then I dont go props.density but I go through 
+		//Brady's Rest API and grab my data from there depending on the name from props.Name associated with Bradys statePer
+		this._div.innerHTML = '<h4>Country and State</h4>' +  (props ?
+				'<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>' //Fix this so that our map shows the actual state and such that it fits wells. Maybe map to String
+						: 'Hover over a state'); //Make the props.Name color black, it is white for now weird
+	};
+
+	info.addTo(map);
+
+	// get color depending on population density value
+	function getColor(d) {
+		return d > 1000 ? '#800026' :
+				d > 500  ? '#BD0026' :
+						d > 200  ? '#E31A1C' :
+								d > 100  ? '#FC4E2A' :
+										d > 50   ? '#FD8D3C' :
+												d > 20   ? '#FEB24C' :
+														d > 10   ? '#FED976' :
+																'#FFEDA0';
+	}
+
+	function style(feature) {
+		return {
+			weight: 2,
+			opacity: 1,
+			color: 'white',
+			dashArray: '3',
+			fillOpacity: 0.7,
+			fillColor: getColor(feature.properties.density)
+		};
+	}
+
+	function highlightFeature(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+			weight: 5,
+			color: '#666',
+			dashArray: '',
+			fillOpacity: 0.7
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+		}
+
+		info.update(layer.feature.properties);
+	}
+
+	var geojson;
+
+	function resetHighlight(e) {
+		geojson.resetStyle(e.target);
+		info.update();
+	}
+
+	function zoomToFeature(e) {
+		map.fitBounds(e.target.getBounds());
+	}
+
+	function onEachFeature(feature, layer) {
+		layer.on({
+			mouseover: highlightFeature,
+			mouseout: resetHighlight,
+			click: zoomToFeature
+		});
+	}
+	
+	//Load the states database
+	   geojson = L.geoJson(c, {
+		style: style,
+		onEachFeature: onEachFeature
+	}).addTo(map);
+
+	//map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
+
+
+	var legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+
+		var div = L.DomUtil.create('div', 'info legend'),
+				grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+				labels = [],
+				from, to;
+
+		for (var i = 0; i < grades.length; i++) {
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(
+					'<i style="background:' + getColor(from + 1) + '"></i> ' +
+					from + (to ? '&ndash;' + to : '+'));
+		}
+
+		div.innerHTML = labels.join('<br>');
+		return div;
+	};
+
+	legend.addTo(map);
+}
+	
+$( document ).ready(function() {
+	instantianteMap("19901.js");
+});
+</script>
+            </div>
+        </div>
+        
+    </header>
+
+    <section class="bg-primary" id="about">
+    	<div>
+        	<select id="selectBox" onchange="changeFunc();" class="btn-primary">
+   				<option value="2">Year 1991</option>
+   				<option value="19902.js">Year 1990</option>
+
+  			</select>
+		</div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">We've got what you need!</h2>
+                    <hr class="light">
+                    <p class="text-faded">Visualize flu patterns since the early 2000's</p>
+                    <a href="#services" class="page-scroll btn btn-default btn-xl sr-button">Get Started!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Built with</h2>
+                    <hr class="primary">
+                </div>
+                <div>
+            <p class="greeting-id">The ID is </p>
+            <p class="greeting-content">The content is </p>
+        </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-diamond text-primary sr-icons"></i>
+                        <h3>Rest API</h3>
+                        <p class="text-muted">Transfer our predictive models into our frontend displays</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-paper-plane text-primary sr-icons"></i>
+                        <h3>Javascript libraries</h3>
+                        <p class="text-muted">Display beautiful, dynamic business intelligence graphs</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-newspaper-o text-primary sr-icons"></i>
+                        <h3>Predictive Analytics</h3>
+                        <p class="text-muted">Program utilized to develop predictive models</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-heart text-primary sr-icons"></i>
+                        <h3>Bootstrap</h3>
+                        <p class="text-muted">Enable responsive UI/UX</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Let's Get In Touch!</h2>
+                    <hr class="primary">
+                    <p>Talented Augustana University Computer Science students</p>
+                </div>
+                 <div>
+            <p class="greeting-id">The ID is </p>
+            <p class="greeting-content">The content is </p>
+        </div>
+                <div class="col-lg-4 col-lg-offset-2 text-center">
+                    <i class="fa fa-phone fa-3x sr-contact"></i>
+                    <p>123-456-6789</p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fa fa-envelope-o fa-3x sr-contact"></i>
+                    <p><a href="mailto:your-email@your-domain.com">ouremail@ole.augie.edu</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="vendor/scrollreveal/scrollreveal.min.js"></script>
+    <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/creative.min.js"></script>
+
+</body>
+
+</html>
